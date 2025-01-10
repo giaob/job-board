@@ -1,1 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Example3</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <link rel="icon" href="favicon.png">
+</head>
+<body>
+  <div id='content'>Hello, world!</div>
+  
+<script>
+let main = (data) => {
 
+    let content = document.getElementById('content')
+    content.innerHTML = ''
+
+    for (let i = 0; i < Object.keys(data['jobs']).length; i++) {
+        let item = document.createElement('div');
+        item.className = 'job-item';
+        item.innerHTML = '';
+
+        item.append(data['jobs'][i]['title'])
+
+        item.append(document.createElement('br'))
+
+        item.append(data['jobs'][i]['location'])
+
+        item.append(document.createElement('br'))
+
+        item.append(data['jobs'][i]['jobUrl'])
+
+        item.append(document.createElement('br'))
+        item.append(document.createElement('br'))
+
+        content.append(item)
+    }   
+
+}
+
+let answerContainer = []
+let numberOfPrompts = 2
+
+for (let index = 0; index < numberOfPrompts; index++) {
+    let answer = ''
+    if (index == 0) {
+        answer = prompt("Please enter your api key", "username with colon that in encoded in base64")
+    } else {
+        answer = prompt("Please enter your job board name", "on the ashby site")
+    }
+    answerContainer.push(answer)
+}
+
+const url = `https://api.ashbyhq.com/posting-api/job-board/${answerContainer[1]}`;
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    'content-type': 'application/json',
+    authorization: `Basic ${answerContainer[0]}`
+  }
+};
+
+fetch(url, options)
+  .then(res => res.json())
+  .then(json => main(json))
+  .catch(err => console.error(err));
+
+</script>
+</body>
+</html>
